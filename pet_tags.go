@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
+	graphql "github.com/graph-gophers/graphql-go"
 	"github.com/jinzhu/gorm"
-	graphql "github.com/neelance/graphql-go"
 )
 
 // Tag is the base type for a pet tag to be used by the db and gql

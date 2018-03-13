@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	graphql "github.com/graph-gophers/graphql-go"
 	"github.com/jinzhu/gorm"
-	graphql "github.com/neelance/graphql-go"
 )
 
 // User is the base user model to be used throughout the app

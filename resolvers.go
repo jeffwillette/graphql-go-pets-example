@@ -98,6 +98,6 @@ func boolP(b bool) *bool {
 }
 
 func gqlIDP(id uint) *graphql.ID {
-	r := graphql.ID(id)
+	r := graphql.ID(fmt.Sprint(id))
 	return &r
 }

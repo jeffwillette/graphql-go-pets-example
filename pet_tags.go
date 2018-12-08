@@ -15,6 +15,7 @@ type Tag struct {
 }
 
 // RESOLVERS ===========================================================================
+
 // ID resolves the ID for Tag
 func (t *Tag) ID(ctx context.Context) *graphql.ID {
 	return gqlIDP(t.Model.ID)

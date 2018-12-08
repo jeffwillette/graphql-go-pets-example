@@ -18,6 +18,7 @@ type User struct {
 }
 
 // RESOLVER METHODS ====================================================================
+
 // ID resolves the user ID
 func (u *User) ID(ctx context.Context) *graphql.ID {
 	return gqlIDP(u.Model.ID)

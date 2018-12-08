@@ -2,10 +2,11 @@ package main
 
 import (
 	"io/ioutil"
-	"log"
 	"net/http"
+	"time"
 
 	graphql "github.com/graph-gophers/graphql-go"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/graph-gophers/graphql-go/relay"
 )
@@ -17,15 +18,23 @@ func main() {
 		panic(err)
 	}
 
-	schema := graphql.MustParseSchema(s, &Resolver{})
+	db, err := newDB("./db.sqlite")
+	if err != nil {
+		panic(err)
+	}
 
-	http.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	schema := graphql.MustParseSchema(s, &Resolver{db: db}, graphql.UseStringDescriptions())
+
+	mux := http.NewServeMux()
+
+	mux.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write(page)
 	}))
 
-	http.Handle("/query", &relay.Handler{Schema: schema})
+	mux.Handle("/query", &relay.Handler{Schema: schema})
 
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.WithFields(log.Fields{"time": time.Now()}).Info("starting server")
+	log.Fatal(http.ListenAndServe("localhost:8080", logged(mux)))
 }
 
 var page = []byte(`
@@ -73,4 +82,19 @@ func getSchema(path string) (string, error) {
 	}
 
 	return string(b), nil
+}
+
+// logging middleware
+func logged(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now().UTC()
+
+		next.ServeHTTP(w, r)
+
+		log.WithFields(log.Fields{
+			"path":    r.RequestURI,
+			"IP":      r.RemoteAddr,
+			"elapsed": time.Now().UTC().Sub(start),
+		}).Info()
+	})
 }

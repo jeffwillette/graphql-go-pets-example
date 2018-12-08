@@ -4,7 +4,8 @@ This example is meant to show a full implementation of the server using an SQL d
 
 ### Starting
 
-start the server
+start the server, if you don't have the sqlite library already installed from gorm, then it 
+may take a while to compile it
 
 ```
 go run *.go
@@ -16,11 +17,15 @@ and then visit the GraphiQL dev server at `localhost:8080`
 
 - int32 maps to the graphql type Int, so if a number is desired, int32 must be used
 
-- the data structs are used for both database storage and graphql resolution.
+- there are data structs for database models, and there is another struct that is usually
+  in the form of...
 
-- resolver methods are all caps because the gorm ORM needs camel cased exported struct
-  fields in order to create database columns correctly. Another differentiation scheme can
-  be used if desired
+  ```
+  type FooResolver struct {
+    db  *DB
+    m   Foo
+  }
+  ```
 
 - authentication could go in middleware in the server part
 

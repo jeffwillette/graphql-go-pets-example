@@ -1,0 +1,12 @@
+{
+    "rules": {
+        "camelcase": "error",
+        "fieldname.typename": "off",
+        "relay.connection": "error", 
+        "relay.id": "error", 
+        "singular.mutations": "error",
+        "enum.casing": "error",
+        "description.type": "warn",
+        "description.field": "off"
+    }
+}
